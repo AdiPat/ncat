@@ -1,6 +1,8 @@
 package src
 
 import (
+	"bytes"
+	"log"
 	"strings"
 	"testing"
 
@@ -9,8 +11,13 @@ import (
 
 func TestNcat(t *testing.T) {
 	testFilePath := "../test_data/test.txt"
+	var (
+		buff       bytes.Buffer
+		MockLogger = log.New(&buff, "", log.LstdFlags)
+	)
 
 	t.Run("ncat", func(t *testing.T) {
+
 		t.Run("accepts file path and returns the file text", func(t *testing.T) {
 			expectedLines := []string{
 				`"Your heart is the size of an ocean. Go find yourself in its hidden depths."`,
@@ -33,6 +40,17 @@ func TestNcat(t *testing.T) {
 			actual := Ncat(ncatOptions)
 
 			assert.Equal(t, expected, actual.out)
+		})
+
+		t.Run("logs an error message if the file is not found", func(t *testing.T) {
+			Logger = MockLogger
+			ncatOptions := NcatOptions{
+				FilePath: "non_existent_file.txt",
+			}
+			Ncat(ncatOptions)
+			actual := buff.String()
+			expected := "ncat: file 'non_existent_file.txt' does not exist. \n"
+			assert.Contains(t, actual, expected)
 		})
 
 	})

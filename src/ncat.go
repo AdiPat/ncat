@@ -13,6 +13,14 @@ type NcatResult struct {
 }
 
 func Ncat(options NcatOptions) NcatResult {
-	fileContents, _ := os.ReadFile(options.FilePath)
+	fileContents, err := os.ReadFile(options.FilePath)
+
+	if err != nil {
+		if os.IsNotExist(err) {
+			Logger.Printf("ncat: file '%s' does not exist. \n", options.FilePath)
+		}
+		return NcatResult{out: ""}
+	}
+
 	return NcatResult{out: string(fileContents)}
 }
