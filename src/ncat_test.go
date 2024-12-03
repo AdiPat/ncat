@@ -37,7 +37,8 @@ func TestNcat(t *testing.T) {
 				FilePath: testFilePath,
 			}
 
-			actual := Ncat(ncatOptions)
+			ncatClient := NcatClient{}
+			actual := ncatClient.Ncat(ncatOptions)
 
 			assert.Equal(t, expected, actual.out)
 		})
@@ -47,7 +48,8 @@ func TestNcat(t *testing.T) {
 			ncatOptions := NcatOptions{
 				FilePath: "non_existent_file.txt",
 			}
-			Ncat(ncatOptions)
+			ncatClient := NcatClient{}
+			ncatClient.Ncat(ncatOptions)
 			actual := buff.String()
 			expected := "ncat: file 'non_existent_file.txt' does not exist. \n"
 			assert.Contains(t, actual, expected)

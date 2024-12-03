@@ -12,7 +12,9 @@ type NcatResult struct {
 	out string
 }
 
-func Ncat(options NcatOptions) NcatResult {
+type NcatClient struct{}
+
+func (n NcatClient) Ncat(options NcatOptions) NcatResult {
 	fileContents, err := os.ReadFile(options.FilePath)
 
 	if err != nil {
